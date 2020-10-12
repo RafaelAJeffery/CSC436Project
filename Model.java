@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.util.Observable;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Model extends Observable implements Serializable{
@@ -21,6 +22,11 @@ public class Model extends Observable implements Serializable{
 		
 	}
 	
+	
+	/*
+	 * Purpose: returns a book if its name matches
+	 * bookName
+	 */
 	public Book getBook(String bookName) {
 		Book expected;
 		for(Book book : bookList) {
@@ -30,6 +36,31 @@ public class Model extends Observable implements Serializable{
 			}
 		}
 				return null;
+	}
+	
+	public void addBook(Book toAdd) {
+		this.bookList.add(toAdd);
+	}
+	
+	/*
+	 * *******************README**********************
+	 * 
+	 * Purpose: for the purpose of iteration 1, this 
+	 * function will search by matching some keyword
+	 * to the publisher of a book. This is preetty much 
+	 * just searching by publisher name 
+	 * 
+	 * @returns a List of books that contains the search 
+	 * results
+	 */
+	public List<Book> search(String keyword){
+		List<Book> searchResult= new ArrayList<Book>();
+		for(Book book : bookList) {
+			if (book.getPublisher().equals(keyword)){
+				searchResult.add(book);
+			}
+		}
+		return searchResult;
 	}
 	
 	
