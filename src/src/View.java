@@ -1,5 +1,6 @@
 package src;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
@@ -23,7 +24,9 @@ public class View extends Application {
 	private int itemCount = 0;
 	private MenuBar cart = new MenuBar();
 	private Menu cartMenu = new Menu("Cart (" + itemCount + ")");
+	private MenuItem reserve = new MenuItem("Confirm Reservation");
 	private MenuItem none = new MenuItem("Cart is Empty");
+	private ArrayList<Book> bookList = new ArrayList<Book>();
 	private Model model = new Model();
 	private int numBooks = 2;
 	
@@ -31,79 +34,111 @@ public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
+		stage.setTitle("SafeSearch: Log In");
 		pane = new BorderPane();
 		ScrollPane scroll = new ScrollPane();
-		
-		
-		cart.prefWidthProperty().bind(primaryStage.widthProperty());
-		cartMenu.getItems().add(none);
-		cart.getMenus().add(cartMenu);
-		pane.setTop(cart);
-		
-		scroll.setFitToHeight(true);
-		scroll.setFitToWidth(true);
+		Scene scene;
 		
 		stage.setHeight(400);
 		stage.setWidth(600);
 		
+		scroll.setFitToHeight(true);
+		scroll.setFitToWidth(true);
+		
+		
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 10, 10));
+		pane.setPadding(new Insets(100, 200, 100, 200));
 		
-		String selections[] = {"Book Title", "ISBN Number", "Format", "Genre", "Publisher", "Author Name", "Keywords"};
+		TextField username = new TextField("Username");
+		TextField password = new TextField("Password");
+		Button enter = new Button("Enter");
+		VBox signIn = new VBox(3);
 		
-		ComboBox dropDown = new ComboBox(FXCollections.observableArrayList(selections));
+		signIn.prefWidthProperty().bind(pane.widthProperty());
+		signIn.prefHeightProperty().bind(pane.heightProperty());
+		signIn.setAlignment(Pos.CENTER);
 		
-		dropDown.setOnAction((getQuery) -> {
-			selection = (String) dropDown.getValue();
-			System.out.println(selection);
-		});
+		signIn.getChildren().addAll(username, password, enter);
 		
-		Label searchQuery = new Label("Search What?");
-		TextField searchTerm = new TextField("");
-		Button searchButton = new Button("Search!");
 		
-		searchButton.setOnAction((getQuery) -> {
-			query = searchTerm.getText();
-			System.out.println(query);
-			List<Book> bookList;
-			if(query.isEmpty()) {
-				bookList = model.getBookList();
-			}else {
-				bookList = model.search(query, (String)dropDown.getValue());
-			}
-			
-			for(int i = 2; i < numBooks; i++) {
-				grid.getChildren().remove(2);
-			}
-			
-			numBooks = 2;
-			for(Book book : bookList) {
-				makeBookImage(numBooks, book);
-				numBooks++;
-			}
-		});
-		
-		HBox searchBox = new HBox(4);
-		
-		searchBox.getChildren().addAll(searchQuery, searchTerm, dropDown, searchButton);
-		searchBox.setAlignment(Pos.CENTER);
-		searchBox.prefWidthProperty().bind(primaryStage.widthProperty());
-		
-		Label welcome = new Label("Welcome to the Library!");
-		
-		grid.add(welcome, 0, 0);
-		grid.add(searchBox, 0, 1);
-		
-		GridPane.setHalignment(welcome, HPos.CENTER);
-		GridPane.setHalignment(searchBox, HPos.CENTER);
-		pane.setCenter(grid);
+		pane.setCenter(signIn);
 		
 		scroll.setContent(pane);
+		
+		scene = new Scene(scroll);
+		
+		enter.setOnAction((openUp) -> {
+			boolean userFound = true; // set to the user search
+			if(userFound = true) {
+				stage.setTitle("SafeSearch: Search Menu");
+				cart.prefWidthProperty().bind(primaryStage.widthProperty());
+				cartMenu.getItems().add(none);
+				cart.getMenus().add(cartMenu);
+				pane.setTop(cart);
+				pane.setPadding(new Insets(0, 0, 0, 0));
+	
+				
+				String selections[] = {"Book Title", "ISBN Number", "Format", "Genre", "Publisher", "Author Name", "Keywords"};
+				
+				ComboBox dropDown = new ComboBox(FXCollections.observableArrayList(selections));
+				
+				dropDown.setOnAction((getQuery) -> {
+					selection = (String) dropDown.getValue();
+					System.out.println(selection);
+				});
+				
+				Label searchQuery = new Label("Search What?");
+				TextField searchTerm = new TextField("");
+				Button searchButton = new Button("Search!");
+				
+				searchButton.setOnAction((getQuery) -> {
+					query = searchTerm.getText();
+					System.out.println(query);
+					List<Book> bookList;
+					if(query.isEmpty()) {
+						bookList = model.getBookList();
+					}else {
+						bookList = model.search(query, (String)dropDown.getValue());
+					}
+					
+					for(int i = 2; i < numBooks; i++) {
+						grid.getChildren().remove(2);
+					}
+					
+					numBooks = 2;
+					for(Book book : bookList) {
+						makeBookImage(numBooks, book);
+						numBooks++;
+					}
+				});
+				
+				HBox searchBox = new HBox(4);
+				
+				searchBox.getChildren().addAll(searchQuery, searchTerm, dropDown, searchButton);
+				searchBox.setAlignment(Pos.CENTER);
+				searchBox.prefWidthProperty().bind(primaryStage.widthProperty());
+				
+				Label welcome = new Label("Welcome to the Library!");
+				
+				grid.add(welcome, 0, 0);
+				grid.add(searchBox, 0, 1);
+				
+				GridPane.setHalignment(welcome, HPos.CENTER);
+				GridPane.setHalignment(searchBox, HPos.CENTER);
+				pane.setCenter(grid);
+				
+				scroll.setContent(pane);
+				stage.setScene(scene);
+				stage.show();
+			}
+		});
 
-		Scene scene = new Scene(scroll);
 		stage.setScene(scene);
 		stage.show();
+		
+
 	}
 	
 	
@@ -174,6 +209,10 @@ public class View extends Application {
 		
 		
 		
+		reserve.setOnAction((reserveWindow) -> {
+			reserveStage();
+		});
+		
 		
 		
 		reserveButton.setOnAction((reserveItem) -> { 
@@ -187,7 +226,12 @@ public class View extends Application {
 				if(cartMenu.getItems().contains(none)) {
 					cartMenu.getItems().remove(none);
 				}
+				if(cartMenu.getItems().contains(reserve)) {
+					cartMenu.getItems().remove(reserve);
+				}
 				cartMenu.getItems().add(add);
+				cartMenu.getItems().add(reserve);
+				bookList.add(book);
 			}else {
 				System.out.println("unreserved!");
 				reserveButton.setText("Make Reservation");
@@ -199,6 +243,7 @@ public class View extends Application {
 					cartMenu.getItems().add(none);
 				}
 				cartMenu.getItems().remove(add);
+				bookList.remove(book);
 			}
 			
 		});
@@ -213,6 +258,62 @@ public class View extends Application {
 		grid.add(background, 0, row);
 		GridPane.setHalignment(BookImage, HPos.CENTER);
 	}
+	
+	public Stage reserveStage() {
+		Stage reserveStage = new Stage();
+		BorderPane border = new BorderPane();
+		ScrollPane scroll = new ScrollPane();
+		VBox books = new VBox(bookList.size());
+		
+		border.setPadding(new Insets(10, 10, 10, 10));
+		
+		scroll.setFitToHeight(true);
+		scroll.setFitToWidth(true);
+		
+		reserveStage.setHeight(200);
+		reserveStage.setWidth(300);
+		
+	
+		Label header = new Label("You Reserved:");
+		border.setTop(header);
+		BorderPane.setAlignment(header, Pos.TOP_CENTER);
+		
+		for(Book book : bookList) {
+			Label label = new Label(book.getTitle());
+			books.getChildren().add(label);
+		}
+		books.setAlignment(Pos.TOP_CENTER);
+		border.setCenter(books);
+		BorderPane.setAlignment(books, Pos.TOP_CENTER);
+		
+		String selections[] = {"8:00","8:15","8:30","8:45","9:00","9:15","9:30","9:45","10:00","10:15","10:30","10:45","11:00","11:15","11:30","11:45","12:00","12:15","12:30","12:45","1:00","1:15","1:30","1:45","2:00","2:15","2:30","2:45","3:00","3:15","3:30","3:45","4:00","4:15","4:30", "4:45"}; // Replace this with getter later
+		
+		ComboBox dropDown = new ComboBox(FXCollections.observableArrayList(selections));
+		dropDown.setPromptText("Pickup Time");
+		Button select = new Button("Place Order");
+		
+		select.setOnAction((closeWindow) -> {
+			//Add functionality here
+			itemCount = 0;
+			cartMenu.setText("Cart ("+ itemCount + ")");
+			cartMenu.getItems().clear();
+			cartMenu.getItems().add(none);
+			reserveStage.close();
+		});
+		
+		HBox orderBox = new HBox(2);
+		orderBox.getChildren().addAll(dropDown, select);
+		orderBox.setAlignment(Pos.CENTER);
+		
+		orderBox.setPadding(new Insets(10, 10, 10, 10));
+		
+		border.setBottom(orderBox);
+		scroll.setContent(border);
 
 
+		reserveStage.setScene(new Scene(scroll));
+		reserveStage.show();
+		return reserveStage;
+	}
 }
+
