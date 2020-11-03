@@ -30,4 +30,5 @@ The project is set up a Maven project. This will allow the application to be mod
        - Imports follow "import Library.MVC.class"
      - src/test/java: Holds any testing files (JUnit tests will go here)
 ### How to Run??
-Maven projects are integrated into Eclipse. You want to clean and the project. In Eclipse, you can run the Maven project with the goal "clean javafx:run". This will run the project as a JavaFx project (see the build portion of POM.XML)
+Maven projects are integrated into Eclipse. You want to clean and the project. In Eclipse, you can run the Maven project with the goal "clean javafx:run". This will run the project as a JavaFx project (see the build portion of POM.XML).
+Note: I am getting an error during compilation where "org.openjfx.JavaFXRunMojo" isn't present. I have yet to find a fix for that, but I wanted to let y'all know. 
