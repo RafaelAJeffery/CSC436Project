@@ -1,4 +1,4 @@
-package src;
+package Library.MVC;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 public class View extends Application {
 
+	static String[] savedArgs;
 	private Stage stage;
 	private BorderPane pane;
 	private GridPane grid = new GridPane();
@@ -314,6 +315,11 @@ public class View extends Application {
 		reserveStage.setScene(new Scene(scroll));
 		reserveStage.show();
 		return reserveStage;
+	}
+	
+	public static void main(String[] args) {
+		savedArgs = args;
+		launch();
 	}
 }
 

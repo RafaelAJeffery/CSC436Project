@@ -1,4 +1,5 @@
-package src;
+package Library.MVC;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,6 +8,7 @@ import java.util.Observable;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import Library.MVC.View;
 
 
 public class Model extends Observable implements Serializable{
@@ -29,7 +31,7 @@ public class Model extends Observable implements Serializable{
 		 								 */
 		
 		try {
-			File database= new File(Main.savedArgs[0]);
+			File database= new File(View.savedArgs[0]);
 			Scanner scan= new Scanner(database);
 			scan.nextLine();// skips the first line of the file
 			String[] dataSplit; // will be filled when iterating through the file
