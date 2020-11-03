@@ -319,7 +319,7 @@ public class View extends Application {
 	
 	public static void main(String[] args) {
 		savedArgs = args;
-		launch();
+		launch(args);
 	}
 }
 
