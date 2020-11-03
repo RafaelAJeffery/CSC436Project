@@ -25,4 +25,14 @@ public class SQLConnection {
 			sqlConnection = null;
 		}
 	}
+
+	public static void closeConnection() {
+		try {
+			if (sqlConnection != null)
+				sqlConnection.close();
+		}
+		catch (SQLException e) {
+			sqlConnection = null;
+		}
+	}
 }

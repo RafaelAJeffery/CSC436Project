@@ -9,6 +9,10 @@ public class Book {
 	private String publisher;
 	private boolean avaliable;
 	
+	public Book() {
+		super("","","","","");
+	}
+
 	public Book(String title, String ISBN, String format, String genre, String publisher) {
 		this.title = title;
 		this.ISBN = ISBN;
