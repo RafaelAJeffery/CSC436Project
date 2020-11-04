@@ -12,10 +12,11 @@ Docker instructions (in command line)
 (1) docker pull mcr.microsoft.com/mssql/server:2019-latest
 - Installs docker container
 
-(2) docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=L!b4r4y!sC0OL' -e 'MSSQL_PID=Express' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+(2) docker run --name libsql -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=L!b4r4y!sC0OL' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
 - Starts MSSQL instance
+- p x:y (docker port x, localhost port y)
 
-(3) docker exec -it mcr.microsoft.com/mssql/server /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'L!b4r4y!sC0OL'
+(3) docker exec -it libsql /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'L!b4r4y!sC0OL'
 - Connects to SQL server using sqlcmd tools
 ```
 
