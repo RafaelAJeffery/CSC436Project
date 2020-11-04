@@ -31,7 +31,7 @@ public class Model extends Observable implements Serializable{
 		 								 */
 		
 		try {
-			File database= new File(View.savedArgs[0]);
+			File database= new File("test1.csv");//View.savedArgs[0]);
 			Scanner scan= new Scanner(database);
 			scan.nextLine();// skips the first line of the file
 			String[] dataSplit; // will be filled when iterating through the file
