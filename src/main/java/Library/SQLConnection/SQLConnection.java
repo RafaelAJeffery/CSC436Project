@@ -14,7 +14,7 @@ public class SQLConnection {
 	private static final String USER = "SA";
 	private static final String PASSWORD = "Library_is_c00l";
 	
-	private static final boolean debug = true;
+	private static final boolean debug = true;	// True: debug print statements, False: None
 	
 	// private static final String DBNAME = "SQLDB";
 	
