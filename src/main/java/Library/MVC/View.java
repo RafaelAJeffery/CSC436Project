@@ -1,11 +1,13 @@
 package Library.MVC;
 
+import Library.SQLConnection.SQLConnection;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import Library.SQLConnection.SQLConnection;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,11 +18,13 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class View extends Application {
-
-	static String[] savedArgs;
+	private int forumCount;
+	private int commentCount = 0;
 	private Stage stage;
+	private Stage forumStage;
 	private BorderPane pane;
 	private GridPane grid = new GridPane();
+	private GridPane forumGrid = new GridPane();
 	private String query;
 	private String selection;
 	private int itemCount = 0;
@@ -31,6 +35,12 @@ public class View extends Application {
 	private ArrayList<Book> bookList = new ArrayList<Book>();
 	private Model model = new Model();
 	private int numBooks = 2;
+	private String username;
+	
+	public static void main(String[] args) {
+		SQLConnection.makeConnection();
+		launch(args);
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -74,6 +84,7 @@ public class View extends Application {
 		enter.setOnAction((openUp) -> {
 			boolean userFound = true; // set to the user search
 			if(userFound = true) {
+				this.username = username.getText();
 				stage.setTitle("SafeSearch: Search Menu");
 				cart.prefWidthProperty().bind(primaryStage.widthProperty());
 				cartMenu.getItems().add(none);
@@ -94,6 +105,7 @@ public class View extends Application {
 				Label searchQuery = new Label("Search What?");
 				TextField searchTerm = new TextField("");
 				Button searchButton = new Button("Search!");
+				Button forumOpen = new Button("Open Forum");
 				
 				searchButton.setOnAction((getQuery) -> {
 					query = searchTerm.getText();
@@ -116,9 +128,13 @@ public class View extends Application {
 					}
 				});
 				
-				HBox searchBox = new HBox(4);
+				forumOpen.setOnAction((openForum) -> {
+					forumStage();
+				});
 				
-				searchBox.getChildren().addAll(searchQuery, searchTerm, dropDown, searchButton);
+				HBox searchBox = new HBox(5);
+				
+				searchBox.getChildren().addAll(searchQuery, searchTerm, dropDown, searchButton, forumOpen);
 				searchBox.setAlignment(Pos.CENTER);
 				searchBox.prefWidthProperty().bind(primaryStage.widthProperty());
 				
@@ -137,6 +153,10 @@ public class View extends Application {
 			}
 		});
 
+		stage.setOnCloseRequest(e -> {
+			SQLConnection.closeConnection();
+		});
+		
 		stage.setScene(scene);
 		stage.show();
 		
@@ -318,11 +338,121 @@ public class View extends Application {
 		return reserveStage;
 	}
 	
-	public static void main(String[] args) {
-		savedArgs = args;
-		SQLConnection.makeConnection(savedArgs);
-		SQLConnection.closeConnection();
-		launch(args);
+	public Stage forumStage() {
+		forumCount = 2;
+		forumStage = new Stage();
+		BorderPane border = new BorderPane();
+		ScrollPane scroll = new ScrollPane();
+		VBox books = new VBox(bookList.size());
+		
+		forumGrid.setHgap(10);
+		forumGrid.setVgap(10);
+		forumGrid.setPadding(new Insets(10, 10, 10, 10));
+		border.setPadding(new Insets(10, 10, 10, 10));
+		
+		scroll.setFitToHeight(true);
+		scroll.setFitToWidth(true);
+		
+		forumStage.setHeight(400);
+		forumStage.setWidth(600);
+		
+		Button newPost = new Button("Make Post");
+
+		newPost.setOnAction((makePost) -> {
+			makePost(forumCount);
+			forumCount ++;
+		});
+		
+		border.setTop(newPost);
+		border.setCenter(forumGrid);
+		scroll.setContent(border);
+
+
+		forumStage.setScene(new Scene(scroll));
+		forumStage.show();
+		return forumStage;
+	}
+	
+	public void makePost(int row) {
+		GridPane post = new GridPane();
+		BorderPane background = new BorderPane();
+		post.setHgap(10);
+		post.setVgap(10);
+		post.setPadding(new Insets(10, 10, 10, 10));
+		background.setPadding(new Insets(10, 10, 10, 10));
+		
+		HBox title = new HBox(2);
+		HBox body = new HBox(1);
+		HBox reply = new HBox(2);
+		
+		title.prefWidthProperty().bind(background.widthProperty());
+		body.prefWidthProperty().bind(background.widthProperty());
+		post.prefWidthProperty().bind(background.widthProperty());
+		reply.prefWidthProperty().bind(background.widthProperty());
+		background.prefWidthProperty().bind(stage.widthProperty());
+		TextField titleInput = new TextField("Title");
+		Button send = new Button("Post");
+		
+		titleInput.setPrefWidth(450);
+		
+		title.getChildren().addAll(titleInput, send);
+		
+		
+		TextArea bodyInput = new TextArea("Write your post here...");
+		bodyInput.setMinHeight(200);
+		bodyInput.setPrefWidth(500);
+		
+		body.getChildren().addAll(bodyInput);
+		
+		TextField replyInput = new TextField("Reply");
+		Button sendReply = new Button("Send Reply");
+		replyInput.setPrefWidth(415);
+		
+
+		
+		reply.getChildren().addAll(replyInput, sendReply);
+		
+		post.add(title, 0, commentCount);
+		commentCount++;
+		post.add(body, 0, commentCount);
+		commentCount++;
+		
+		send.setOnAction((makePost) -> {
+			title.setMouseTransparent(true);
+			body.setMouseTransparent(true);
+			post.add(reply, 0, commentCount);
+			commentCount++;
+		});
+		
+		sendReply.setOnAction((postReply) -> {
+			makeComment(reply, post);
+		});
+		
+		background.setBackground(new Background(new BackgroundFill(Color.BEIGE, CornerRadii.EMPTY, Insets.EMPTY)));
+		background.setBorder(new Border(new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		background.setCenter(post);
+		
+		forumGrid.add(background, 0, row);
+
+		GridPane.setHalignment(post, HPos.CENTER);
+	}
+	
+	void makeComment(HBox reply, GridPane post) {
+		HBox temp = new HBox(2);
+		TextField tempReplyInput = new TextField("Reply");
+		Button tempSendReply = new Button("Send Reply");
+		tempReplyInput.setPrefWidth(415);
+		temp.getChildren().addAll(tempReplyInput, tempSendReply);
+		
+		tempSendReply.setOnAction((recourse) -> {
+			makeComment(reply, post);
+		});
+		
+		reply.setMouseTransparent(true);
+		
+		post.add(temp, 0, commentCount);
+		commentCount++;
+		System.out.println(commentCount);
 	}
 }
 
