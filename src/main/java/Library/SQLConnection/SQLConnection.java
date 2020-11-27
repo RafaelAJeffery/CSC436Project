@@ -22,7 +22,7 @@ public class SQLConnection {
 	 * Establish connection to SQL
 	 * args: [Database Name, Username, Password]
 	 */
-	public static void makeConnection(String[] args) {
+	public static void makeConnection() {
 		String connectionUrl = String.format("jdbc:sqlserver://%s:%d", HOST, PORT);
 		
 		try {
@@ -31,7 +31,7 @@ public class SQLConnection {
 				if (debug) System.out.println("Connection not made");
 			} else {
 				if (debug) {
-					System.out.println("Connection made:");
+					System.out.println("Connection established:");
 					DatabaseMetaData metadata = (DatabaseMetaData) sqlConnection.getMetaData();
 					System.out.println("Driver name: " + metadata.getDriverName());
 	                System.out.println("Driver version: " + metadata.getDriverVersion());
@@ -48,8 +48,10 @@ public class SQLConnection {
 
 	public static void closeConnection() {
 		try {
-			if (sqlConnection != null)
+			if (sqlConnection != null) {
 				sqlConnection.close();
+				if (debug) System.out.println("Connection closed");
+			}
 		}
 		catch (SQLException e) {
 			sqlConnection = null;
