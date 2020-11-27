@@ -10,7 +10,7 @@ public class Book {
 	private boolean avaliable;
 	
 	public Book() {
-		super("","","","","");
+		this("","","","","");
 	}
 
 	public Book(String title, String ISBN, String format, String genre, String publisher) {

@@ -3,6 +3,7 @@ package Library.MVC;
 import java.util.ArrayList;
 import java.util.List;
 
+import Library.SQLConnection.SQLConnection;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
@@ -319,6 +320,8 @@ public class View extends Application {
 	
 	public static void main(String[] args) {
 		savedArgs = args;
+		SQLConnection.makeConnection(savedArgs);
+		SQLConnection.closeConnection();
 		launch(args);
 	}
 }

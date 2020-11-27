@@ -5,6 +5,7 @@ import Library.MVC.Book;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Controller {
@@ -18,18 +19,18 @@ public class Controller {
         try {
             Statement stmt = SQLConnection.sqlConnection.createStatement();
 
-            Result results = stmt.executeQuery(selectStr);
+            ResultSet rs = stmt.executeQuery(selectStr);
 
             while (rs.next()) {
                 Book book = new Book();
                 book.setTitle(rs.getString("Title"));
                 book.setISBN(rs.getString("ISBN"));
                 // and etc.
-                bookList.append(new Book())
+                bookList.add(new Book());
             }
         }
         catch(SQLException e) {
-            SQLConnection.sqlConnection.closeConnection();
+            SQLConnection.closeConnection();
         }
 
         return bookList;
