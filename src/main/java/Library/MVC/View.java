@@ -7,7 +7,6 @@ import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,20 +19,25 @@ import javafx.stage.Stage;
 public class View extends Application {
 	private int forumCount;
 	private int commentCount = 0;
+	
 	private Stage stage;
 	private Stage forumStage;
 	private BorderPane pane;
 	private GridPane grid = new GridPane();
 	private GridPane forumGrid = new GridPane();
+	
 	private String query;
 	private String selection;
+	
 	private int itemCount = 0;
 	private MenuBar cart = new MenuBar();
 	private Menu cartMenu = new Menu("Cart (" + itemCount + ")");
 	private MenuItem reserve = new MenuItem("Confirm Reservation");
 	private MenuItem none = new MenuItem("Cart is Empty");
+	
 	private ArrayList<Book> bookList = new ArrayList<Book>();
 	private Model model = new Model();
+	private Controller controller = new Controller();
 	private int numBooks = 2;
 	private String username;
 	
@@ -114,7 +118,7 @@ public class View extends Application {
 					if(query.isEmpty()) {
 						bookList = model.getBookList();
 					}else {
-						bookList = model.search(query, (String)dropDown.getValue());
+						bookList = controller.search((String)dropDown.getValue(), query);
 					}
 					
 					for(int i = 2; i < numBooks; i++) {

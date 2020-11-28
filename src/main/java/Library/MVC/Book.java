@@ -1,5 +1,7 @@
 package Library.MVC;
 
+import java.util.HashMap;
+
 public class Book {
 	
 	private String title;

@@ -5,4 +5,5 @@ module Application {
 
     opens Library.MVC to javafx.fxml;
     exports Library.MVC;
+    exports Library.SQLConnection;
 }

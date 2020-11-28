@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Observable;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import Library.MVC.View;
 
@@ -16,7 +17,6 @@ public class Model extends Observable implements Serializable{
 	private static final long serialVersionUID = 1L;    // UID for serializable
 	
 	private ArrayList<Book> bookList;
-
 	
 	//constructor
 	public Model() {
@@ -57,7 +57,6 @@ public class Model extends Observable implements Serializable{
 
 		
 	}
-	
 	
 	/*
 	 * Purpose: returns a book if its name matches
