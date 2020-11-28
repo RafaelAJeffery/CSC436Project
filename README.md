@@ -9,6 +9,7 @@ We will be using a MS SQL to store the information for the library management sy
 
 Docker instructions (in command line)
 ```
+Note: If you're using Windows, run this in Windows Powershell with Admin priviledges. If you're using MacOSx, run these commands with the "sudo" prefix.
 (1) docker pull mcr.microsoft.com/mssql/server:2019-latest
 - Installs docker container
 
@@ -16,8 +17,23 @@ Docker instructions (in command line)
 - Starts MSSQL instance
 - p x:y (docker port x, localhost port y)
 
-(3) docker exec -it libsql /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'L!b4r4y!sC0OL'
-- Connects to a shell to work manage SQL servers
+(3) docker exec -it libsql "bash"
+- Connects to a bash shell
+
+(4) /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'L!b4r4y!sC0OL'
+- Connects to a SQL shell (sqlcmd)
+- No need to use sudo from this point on
+
+(5) Set up SQL
+- Copy the following statements onto the SQL shell
+CREATE DATABASE library
+USE library
+CREATE TABLE books (title NVARCHAR(50), isbn NVARCHAR(50), format NVARCHAR(50), genre NVARCHAR(50), publisher NVARCHAR(50))
+INSERT INTO books VALUES ("Cooking Chicken: The Bird", "30303020193", "paperback", "cooking", "Mama Mia Cooking House")
+INSERT INTO books VALUES ("Physics: The Textbook", "75984301378", "ebook", "education", "Atomic Pages")
+INSERT INTO books VALUES ("Physics: The Handbook", "75984301379", "ebook", "education", "Atomic Pages")
+INSERT INTO books VALUES ("Rattle Snakes", "75984301379", "hardcover", "non-fiction", "Slither Reads")
+GO
 ```
 
 ## Maven Repository
